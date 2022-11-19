@@ -5,8 +5,8 @@ const GlobalStyles = () => (
     styles={{
       '*': {
         boxSizing: 'border-box',
-        margin: 10,
-        padding: 0,
+        margin: 0,
+        padding: 2,
       },
       html: {
         WebkitFontSmoothing: 'antialiased',
