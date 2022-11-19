@@ -4,7 +4,7 @@ import GlobalStyles from './GlobalStyles';
 import Matches from './pages/Matches';
 
 const App = () => (
-  <ThemeProvider theme={createTheme()}>
+  <ThemeProvider theme={createTheme({ palette: { mode: 'dark' } })}>
     <GlobalStyles />
     <Matches />
   </ThemeProvider>
