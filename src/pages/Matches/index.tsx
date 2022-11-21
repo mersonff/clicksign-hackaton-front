@@ -1,4 +1,6 @@
-import { useCallback, useState } from 'react';
+import {
+  useCallback, useEffect, useRef, useState,
+} from 'react';
 import {
   Accordion,
   AccordionDetails,
@@ -7,10 +9,13 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
+import ActionCable from 'actioncable';
 
 import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
 import Scoreboard from '../../components/Scoreboard';
+
+import { finishedMatches } from './api';
 
 export interface IMatch {
   id: number;
@@ -26,6 +31,7 @@ export interface IMatch {
 }
 
 const Matches = () => {
+  const ref = useRef<ActionCable.Cable | null>(null);
   const [expanded, setExpanded] = useState<string | false>(false);
 
   const [pastMatches, setPastMatches] = useState<Array<IMatch>>([]);
@@ -34,6 +40,20 @@ const Matches = () => {
   const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  const formatLiveMatches = useCallback((matches: any) => {
+    console.log(matches);
+    setLiveMatches(matches.map((match: any) => ({
+      id: match.id,
+      stage: match.stage,
+      home: match.home,
+      away: match.away,
+      homeGoals: match.homeGoals,
+      awayGoals: match.awayGoals,
+      live: true,
+      time: Number(match.time).toFixed(0),
+    })));
+  }, []);
 
   const renderScoreboard = useCallback((match: IMatch) => (
     <Grid item xs={4} key={match.id}>
@@ -50,6 +70,33 @@ const Matches = () => {
       />
     </Grid>
   ), []);
+
+  const url = 'http://localhost:3000/cable';
+
+  const handleReceivedMessages = useCallback((payload: any) => {
+    formatLiveMatches(payload.matches);
+  }, []);
+
+  useEffect(() => {
+    if (ref.current) return undefined;
+
+    const cable = ActionCable.createConsumer(url);
+
+    cable.subscriptions.create({ channel: 'MatchesChannel' }, {
+      connected() {
+        finishedMatches(setPastMatches);
+      },
+      disconnected() {
+        console.log('Disconnected');
+      },
+      received: (payload) => handleReceivedMessages(payload),
+    });
+    cable.connect();
+
+    ref.current = cable;
+
+    return () => cable.ensureActiveConnection();
+  }, []);
 
   return (
     <Box>
