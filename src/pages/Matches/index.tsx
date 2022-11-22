@@ -48,6 +48,8 @@ const Matches = () => {
       stage: match.stage,
       home: match.home,
       away: match.away,
+      homeFlag: match.homeFlag,
+      awayFlag: match.awayFlag,
       homeGoals: match.homeGoals,
       awayGoals: match.awayGoals,
       live: true,
@@ -125,6 +127,7 @@ const Matches = () => {
           <Typography sx={{ width: '33%', flexShrink: 0 }}>Partidas em Andamento</Typography>
         </AccordionSummary>
         <AccordionDetails>
+          {liveMatches.length === 0 && (<Typography sx={{ width: '33%', flexShrink: 0 }}>Não há partidas acontecendo ao vivo</Typography>)}
           <Grid container spacing={2}>
             {liveMatches.map((match) => renderScoreboard(match))}
           </Grid>

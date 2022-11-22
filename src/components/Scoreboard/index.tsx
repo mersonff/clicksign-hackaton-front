@@ -35,13 +35,13 @@ const Scoreboard = ({
       <Crono live={live} time={time} />
     </HeaderBox>
     <ContentBox>
-      {/* {homeFlag && <img src={homeFlag} height={60} width="auto" alt="home team flag" />} */}
+      {homeFlag && <img src={homeFlag} height={50} width="auto" alt="team flag" />}
       <Typography fontSize={16}>{home}</Typography>
       <Typography fontSize={24}>{homeGoals}</Typography>
       <Typography fontSize={14}>x</Typography>
       <Typography fontSize={24}>{awayGoals}</Typography>
       <Typography fontSize={16}>{away}</Typography>
-      {/* {awayFlag && <img src={awayFlag} height={60} width="auto" alt="away team flag" />} */}
+      {awayFlag && <img src={awayFlag} height={50} width="auto" alt="team flag" />}
     </ContentBox>
   </ScoreboardPaper>
 );
