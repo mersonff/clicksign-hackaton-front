@@ -42,7 +42,6 @@ const Matches = () => {
   };
 
   const formatLiveMatches = useCallback((matches: any) => {
-    if (matches.length !== liveMatches.length) finishedMatches(setPastMatches);
     setLiveMatches(matches.map((match: any) => ({
       id: match.id,
       stage: match.stage,
